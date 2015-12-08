@@ -12,9 +12,9 @@ var initLocalStorage = function(field, url) {
 			if (r.readyState != 4 || r.status != 200) return;
 			console.log('Success: ' + r.responseText);
 			window.localStorage.setItem(field, r.responseText);
-		}; 
-		r.send();	
-	} 
+		};
+		r.send();
+	}
 }
 
 initLocalStorage(field, url);
@@ -26,19 +26,19 @@ initLocalStorage(field, url);
 
 //TODO add textAnalysis
 var textAnalysis = function (word, text) {
-	var	textL = text.length;
+	var textL = text.length;
 	var wordL = word.length;
 
 	var offsets = [];
 
 	for (var i=0; i < textL; i++) {
-		var right = 0;		
-		for (var j=0; j < wordL; j++) {	
+		var right = 0;
+		for (var j=0; j < wordL; j++) {
 			if (text[i] == word[j]) right++;
 			if (right/wordL > 0.7) break;
 			if ((right-j)/wordL > 0.1) break;
 		}
-		if (right/wordL >= 0.7) offsets.push(i); 
+		if (right/wordL >= 0.7) offsets.push(i);
 	}
 
 	return offsets;
@@ -95,8 +95,8 @@ document.addEventListener('keypress', function (event) {
 	} else {
 		for (i in variants) {
 			if ((variants[i].type == 'radio') || (variants[i].type == 'checkbox')) {
-				variants[i].parentNode.style.color = '';			
-			}		
+				variants[i].parentNode.style.color = '';
+			}
 		}
 		toggle = false;
 	}
