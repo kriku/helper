@@ -1,5 +1,8 @@
-var toggle = false;
-var variants = {};
+// ---------------------------------------------------------------------
+//	local storage
+// ---------------------------------------------------------------------
+var field = 'text';
+var url = 'https://kriku.github.io/helper/text.txt';
 
 var initLocalStorage = function(field, url) {
 	if (window.localStorage.getItem(field) == null) {
@@ -14,9 +17,15 @@ var initLocalStorage = function(field, url) {
 	} 
 }
 
-initLocalStorage('text', 'https://kriku.github.io/helper/text.txt');
+initLocalStorage(field, url);
 
-var textAnalys = function (word, text) {
+
+// ---------------------------------------------------------------------
+//	text analysis
+// ---------------------------------------------------------------------
+
+//TODO add textAnalysis
+var textAnalysis = function (word, text) {
 	var	textL = text.length;
 	var wordL = word.length;
 
@@ -29,11 +38,19 @@ var textAnalys = function (word, text) {
 			if (right/wordL > 0.7) break;
 			if ((right-j)/wordL > 0.1) break;
 		}
-		if (right/wordL > 0.9) offsets.push(i); 
+		if (right/wordL >= 0.7) offsets.push(i); 
 	}
 
 	return offsets;
 }
+
+
+// ---------------------------------------------------------------------
+//	event listener on keypress
+// ---------------------------------------------------------------------
+
+var toggle = false;
+var variants = {};
 
 document.addEventListener('keypress', function (event) {
 	var textNodesUnder = function (el) {
@@ -67,6 +84,7 @@ document.addEventListener('keypress', function (event) {
 				if ((variants[i].type == 'radio') || (variants[i].type == 'checkbox')) {
 				    if (variants[i].parentNode) {
 						var variantText = textUnder(variants[i].parentNode);
+						//	place for text analysis with selected word (text)
 						variants[i].parentNode.style.color = '#f00';
 						console.log(variantText);
 				    }
