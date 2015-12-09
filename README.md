@@ -17,7 +17,7 @@
 
 адрес сервера бэкенда нужно поменять в файле скрипта
 ```javascript
-var url = "http(s)://your.backend.to"
+var url = "http(s)://your.backend.to";
 ````
 
 
