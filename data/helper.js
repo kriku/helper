@@ -50,24 +50,9 @@ var textAnalysis = function (word, text) {
 // ---------------------------------------------------------------------
 //	event listener on keypress
 // ---------------------------------------------------------------------
-var color = {idle: '#bbb', wait: '#eea', success: '#bd8', error: "#e88"}
-var variants = {};
-
 var variants = {};
 var toggle = false;
 var url = "http://q.test/";
-
-var identifier = document.createElement('DIV');
-identifier.style.position = 'fixed';
-identifier.style.bottom = '10px';
-identifier.style.left = '10px';
-identifier.style.width = '10px';
-identifier.style.height = '10px';
-identifier.style.zIndex = '100000';
-identifier.style.border = '2px solid #bbb';
-identifier.style.borderRadius = '10px';
-document.body.appendChild(identifier);
-
 
 var textNodesUnder = function (el) {
 		var n, a=[], walk = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null, false);
@@ -87,35 +72,30 @@ var POST = function (text) {
     r.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     r.onreadystatechange = function () {
 			  if (r.readyState != 4 || r.status != 200) return;
-			  console.log('Success: ' + r.responseText);
-        if (r.responseText=='') {
-            identifier.style.borderColor = color.wait;
-        } else {
-            console.log(variants);
+        if (r.responseText!='') {
             for (i in variants) {
-                if (textUnder(variants[i]).trim() == r.responseText) {
-                    variants[i].style.color = "#f00";
+                if ((variants[i].type == 'radio') || (variants[i].type == 'checkbox')) {
+                    if (variants[i].parentNode) {
+                        var variantText = textUnder(variants[i].parentNode).trim();
+                        if (variantText == r.responseText) {
+                            variants[i].focus();
+                        }
+                    }
                 }
             }
-            identifier.style.borderColor = color.success;
         }
 			  //window.localStorage.setItem(field, r.responseText);
 		};
-    console.log('send: ' + text + ' !!!!to ' + url);
-    identifier.style.borderColor = color.wait;
 		r.send(text);
 };
 
 
 document.addEventListener('keypress', function (event) {
-
-
 	if (!toggle) {
 
 		if (event.shiftKey && event.charCode == 65) {
 		    var selObj = window.getSelection();
 		    var text = selObj.toString();
-        console.log(text);
 
 		    var selParent = selObj.anchorNode.parentNode;
 
@@ -128,17 +108,12 @@ document.addEventListener('keypress', function (event) {
 		        variants = selParent.getElementsByTagName('input');
 		    }
 
-        console.log(textUnder(selParent));
-
         var variantsText = [];
 		    for (var i in variants) {
             if ((variants[i].type == 'radio') || (variants[i].type == 'checkbox')) {
                 if (variants[i].parentNode) {
                     var variantText = textUnder(variants[i].parentNode);
                     variantsText.push(variantText.trim());
-                    //	place for text analysis with selected word (text)
-                    // variants[i].parentNode.style.color = '#f00';
-                    console.log(variantText);
                 }
             }
 		    }
@@ -149,11 +124,6 @@ document.addEventListener('keypress', function (event) {
 		}
 		toggle = true;
 	} else {
-		for (i in variants) {
-			if ((variants[i].type == 'radio') || (variants[i].type == 'checkbox')) {
-				variants[i].parentNode.style.color = '';
-			}
-		}
 		toggle = false;
 	}
 });
