@@ -74,6 +74,7 @@ document.addEventListener('keypress', function (event) {
 
 		    var selParent = selObj.anchorNode.parentNode;
 
+        variants = {};
 		    variants.length = 0;
 		    while ((variants.length <= 0) && (selParent != window)) {
 		        selParent = selParent.parentNode;
