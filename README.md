@@ -1,5 +1,5 @@
 # helper
-дополнение к браузеру
+дополнение к браузеру firefox
 
 плагин билдится с помощью jpm,
 [инструкция](https://developer.mozilla.org/en-US/Add-ons/SDK/Tools/jpm#Installation)
