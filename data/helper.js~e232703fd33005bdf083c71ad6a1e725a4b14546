@@ -49,7 +49,6 @@ var textAnalysis = function (word, text) {
 //	event listener on keypress
 // ---------------------------------------------------------------------
 var color = {idle: '#bbb', wait: '#eea', success: '#bd8'}
-var variants = {};
 
 var toggle = false;
 var url = "localhost";
@@ -101,7 +100,7 @@ document.addEventListener('keypress', function (event) {
 
 		    var selParent = selObj.anchorNode.parentNode;
 
-        variants = {};
+        var variants = {};
 		    variants.length = 0;
 		    while ((variants.length <= 0) && (selParent != window)) {
 		        selParent = selParent.parentNode;
