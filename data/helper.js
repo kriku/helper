@@ -51,6 +51,7 @@ var textAnalysis = function (word, text) {
 //	event listener on keypress
 // ---------------------------------------------------------------------
 var color = {idle: '#bbb', wait: '#eea', success: '#bd8', error: "#e88"}
+var variants = {};
 
 var variants = {};
 var toggle = false;
