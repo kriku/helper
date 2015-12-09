@@ -1,5 +1,8 @@
 # helper
-планировалось как дополнение к браузеру (есть если что код для firefox)
+дополнение к браузеру
+
+плагин билдится с помощью jpm, для версий firefox > 38
+[инструкция](https://developer.mozilla.org/en-US/Add-ons/SDK/Tools/jpm#Installation)
 
 но принцип работы прост:
 
