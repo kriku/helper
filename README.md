@@ -1,7 +1,7 @@
 # helper
 дополнение к браузеру
 
-плагин билдится с помощью jpm, для версий firefox > 38
+плагин билдится с помощью jpm,
 [инструкция](https://developer.mozilla.org/en-US/Add-ons/SDK/Tools/jpm#Installation)
 
 но принцип работы прост:
