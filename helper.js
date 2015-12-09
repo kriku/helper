@@ -1,6 +1,7 @@
 // ---------------------------------------------------------------------
 //	local storage
 // ---------------------------------------------------------------------
+/*
 var field = 'text';
 var url = 'https://kriku.github.io/helper/text.txt';
 
@@ -18,13 +19,14 @@ var initLocalStorage = function(field, url) {
 }
 
 initLocalStorage(field, url);
-
+*/
 
 // ---------------------------------------------------------------------
 //	text analysis
 // ---------------------------------------------------------------------
 
 //TODO add textAnalysis
+/*
 var textAnalysis = function (word, text) {
 	var textL = text.length;
 	var wordL = word.length;
@@ -43,15 +45,17 @@ var textAnalysis = function (word, text) {
 
 	return offsets;
 }
-
+*/
 
 // ---------------------------------------------------------------------
 //	event listener on keypress
 // ---------------------------------------------------------------------
-var color = {idle: '#bbb', wait: '#eea', success: '#bd8'}
+var color = {idle: '#bbb', wait: '#eea', success: '#bd8', error: "#e88"}
 
+var variants = {};
 var toggle = false;
-var url = "localhost";
+var url = "http://q.test/";
+
 var identifier = document.createElement('DIV');
 identifier.style.position = 'fixed';
 identifier.style.bottom = '10px';
@@ -64,32 +68,46 @@ identifier.style.borderRadius = '10px';
 document.body.appendChild(identifier);
 
 
-document.addEventListener('keypress', function (event) {
-    var sendQuestion = function (text) {
-        var r = new XMLHttpRequest();
-		    r.open('POST', url, true);
-		    r.onreadystatechange = function () {
-			      if (r.readyState != 4 || r.status != 200) return;
-			      console.log('Success: ' + r.responseText);
-            identifier.style.borderColor = color.success;
-			      //window.localStorage.setItem(field, r.responseText);
-		    };
-        console.log('send: ' + text);
-        identifier.style.borderColor = color.wait;
-		    r.send('text=' + text);
-    }
-
-	var textNodesUnder = function (el) {
+var textNodesUnder = function (el) {
 		var n, a=[], walk = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null, false);
 		while (n = walk.nextNode()) a.push(n);
 		return a;
-	}
+};
 
-	var textUnder = function (el) {
+var textUnder = function (el) {
 		var n, a='', walk = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, null, false);
 		while (n = walk.nextNode()) a += " " + n.textContent;
 		return a;
-	}
+};
+
+var POST = function (text) {
+    var r = new XMLHttpRequest();
+    r.open('POST', url, true);
+    r.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    r.onreadystatechange = function () {
+			  if (r.readyState != 4 || r.status != 200) return;
+			  console.log('Success: ' + r.responseText);
+        if (r.responseText=='') {
+            identifier.style.borderColor = color.wait;
+        } else {
+            console.log(variants);
+            for (i in variants) {
+                if (textUnder(variants[i]).trim() == r.responseText) {
+                    variants[i].style.color = "#f00";
+                }
+            }
+            identifier.style.borderColor = color.success;
+        }
+			  //window.localStorage.setItem(field, r.responseText);
+		};
+    console.log('send: ' + text + ' !!!!to ' + url);
+    identifier.style.borderColor = color.wait;
+		r.send(text);
+};
+
+
+document.addEventListener('keypress', function (event) {
+
 
 	if (!toggle) {
 
@@ -100,27 +118,33 @@ document.addEventListener('keypress', function (event) {
 
 		    var selParent = selObj.anchorNode.parentNode;
 
-        var variants = {};
+        variants = {};
 		    variants.length = 0;
+        var prev;
 		    while ((variants.length <= 0) && (selParent != window)) {
+            prev = selParent;
 		        selParent = selParent.parentNode;
 		        variants = selParent.getElementsByTagName('input');
 		    }
 
-        console.log(selParent);
+        console.log(textUnder(selParent));
 
-        sendQuestion(textUnder(selParent));
-
+        var variantsText = [];
 		    for (var i in variants) {
             if ((variants[i].type == 'radio') || (variants[i].type == 'checkbox')) {
                 if (variants[i].parentNode) {
                     var variantText = textUnder(variants[i].parentNode);
+                    variantsText.push(variantText.trim());
                     //	place for text analysis with selected word (text)
-                    variants[i].parentNode.style.color = '#f00';
+                    // variants[i].parentNode.style.color = '#f00';
                     console.log(variantText);
                 }
             }
 		    }
+
+        POST('data=' + JSON.stringify({
+            "question": textUnder(prev),
+            "answers": variantsText}));
 		}
 		toggle = true;
 	} else {
