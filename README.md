@@ -28,4 +28,4 @@ var url = "http(s)://your.backend.to";
 для билда плагина использовать `jpm xpi -o`
 затем в дополнениях (справа вверху, около поиска) выбрать установить дополнение из файла 
 
-также в настройках браузера `about:config` поменять значение `security.mixed_content.block_active_content` на **false**
+также в настройках браузера `about:config` поменять `security.mixed_content.block_active_content` на **false**
