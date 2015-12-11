@@ -17,27 +17,29 @@ var textUnder = function (el) {
 };
 
 var POST = function (text) {
-    var r = new XMLHttpRequest();
-    r.open('POST', url, true);
-    r.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    r.onreadystatechange = function () {
-			  if (r.readyState != 4 || r.status != 200) return;
+    var handler = function () {
+        if (r.readyState != 4 || r.status != 200) return;
         if (r.responseText!='') {
             for (i in variants) {
                 if ((variants[i].type == 'radio') || (variants[i].type == 'checkbox')) {
                     if (variants[i].parentNode) {
                         var variantText = textUnder(variants[i].parentNode).trim();
                         if (variantText == r.responseText) {
+                            //change focus to true answer
+                            //can be change to whatever you want
                             variants[i].focus();
                         }
                     }
                 }
             }
         }
-		};
-		r.send(text);
+    };
+    var r = new XMLHttpRequest();
+    r.open('POST', url, true);
+    r.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    r.onreadystatechange = handler;
+    r.send(text);
 };
-
 
 document.addEventListener('keypress', function (event) {
     if (event.shiftKey && event.charCode == 65) {
@@ -70,5 +72,3 @@ document.addEventListener('keypress', function (event) {
             "answers": variantsText}));
     }
 });
-
-
